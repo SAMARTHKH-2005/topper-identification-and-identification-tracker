@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(120deg, #43cea2 0%, #185a9d 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+            letter-spacing: 1px;
+        }
+        table {
+            width: 95%;
+            margin: 0 auto 2em auto;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.12);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+        }
+        th, td {
+            padding: 0.9em 0.5em;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        th {
+            background: rgba(0,0,0,0.18);
+            color: #fff;
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.18);
+        }
+        button {
+            background: #ffb347;
+            color: #222;
+            border: none;
+            border-radius: 7px;
+            padding: 0.6em 1.2em;
+            margin: 0.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff8008;
+            color: #fff;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.5);
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            color: #222;
+            padding: 2em;
+            border-radius: 10px;
+            min-width: 250px;
+            max-width: 90vw;
+            text-align: center;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 0.5em; right: 1em;
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 2em; height: 2em;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        ul {
+            margin: 0 auto 2em auto;
+            width: 90%;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1em 2em;
+            color: #fff;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        img {
+            display: block;
+            margin: 2em auto;
+            max-width: 90vw;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+        @media (max-width: 700px) {
+            table, th, td { font-size: 0.95em; }
+            .modal-content { padding: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <h2>All Students with Grades</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>USN</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>Attendance</th>
+                <th>Attendance %</th>
+                <th>Insights</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.usn }}</td>
+                <td>{{ student.marks }}</td>
+                <td>{{ student.grade }}</td>
+                <td>{{ student.attendance }}</td>
+                <td>{{ student.attendance_percentage }}%</td>
+                <td>{{ student.insight }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Topper Details</h2>
+    {% if topper %}
+    <button onclick="showTopperInsight()"><strong>Name:</strong> {{ topper.name }}</button>
+    <button onclick="showTopperInsight()"><strong>USN:</strong> {{ topper.usn }}</button>
+    <button onclick="showTopperInsight()"><strong>Marks:</strong> {{ topper.marks }}</button>
+    <button onclick="showTopperInsight()"><strong>Grade:</strong> {{ topper.grade }}</button>
+    {% else %}
+    <p>No topper available.</p>
+    {% endif %}
+
+    <!-- Modal for Topper Insight -->
+    <div id="topperModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeTopperInsight()">&times;</button>
+            <h3>Topper Insight</h3>
+            {% if topper %}
+            <p>
+                {% for student in students %}
+                    {% if student.usn == topper.usn %}
+                        {{ student.insight }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>Failed Students</h2>
+    {% if failed_students %}
+    <ul>
+        {% for student in failed_students %}
+        <li>{{ student }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No failed students.</p>
+    {% endif %}
+
+    <h2>Students with Low Attendance and Good Marks</h2>
+    {% if low_attendance_good_marks %}
+    <ul>
+        {% for student in low_attendance_good_marks %}
+        <li>{{ student }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No students with low attendance and good marks.</p>
+    {% endif %}
+
+    <h2>Students with Low Attendance and Low Marks</h2>
+    {% if low_attendance_low_marks %}
+    <ul>
+        {% for student in low_attendance_low_marks %}
+        <li>{{ student }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No students with low attendance and low marks.</p>
+    {% endif %}
+
+    <h2>Analysis Pie Chart</h2>
+    <img src="{{ url_for('analysis_graph') }}" alt="Analysis Graph">
+
+    <script>
+        function showTopperInsight() {
+            document.getElementById('topperModal').style.display = 'flex';
+        }
+        function closeTopperInsight() {
+            document.getElementById('topperModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            var modal = document.getElementById('topperModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading System & Topper Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 60px auto;
+            background: rgba(255,255,255,0.1);
+            padding: 2em 2em 1em 2em;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5em;
+            letter-spacing: 1px;
+        }
+        form input, form button {
+            width: 100%;
+            padding: 0.8em;
+            margin-bottom: 1em;
+            border: none;
+            border-radius: 7px;
+            font-size: 1em;
+        }
+        form input {
+            background: rgba(255,255,255,0.2);
+            color: #222;
+        }
+        form button {
+            background: #ff6a00;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        form button:hover {
+            background: #ff4500;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 1.5em;
+            color: #ffcc00;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Grading System & Topper Detector</h2>
+        <form action="/submit" method="POST">
+            <input type="text" name="usn" placeholder="Enter student USN" required>
+            <input type="text" name="name" placeholder="Enter student name" required>
+            <input type="number" name="marks" placeholder="Enter student marks" required step="any">
+            <input type="number" name="attendance" placeholder="Enter classes attended" required>
+            <button type="submit">Submit</button>
+        </form>
+        <form action="/delete" method="post">
+            <button type="submit" style="background:#e74c3c;">Delete all students records</button>
+        </form>
+        <a href="/view_students">View All Students</a>
+    </div>
+</body>
+</html>
